@@ -213,7 +213,6 @@ const onSubmit = function(form) {
     body: JSON.stringify(imposter)
   }
 
-  //let mbUrl = 'http://appau101mel0709.globaltest.anz.com:2525'
   let mbUrl = 'http://localhost:2525'
 
   ajax("POST", mbUrl+'/imposters' , reqData, function(result) {

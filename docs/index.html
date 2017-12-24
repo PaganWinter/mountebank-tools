@@ -1,0 +1,247 @@
+<html>
+<head>
+<title>mountebank UI</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+<script src="https://unpkg.com/react-jsonschema-form/dist/react-jsonschema-form.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+-->
+<!--
+  https://stackoverflow.com/questions/32612690/bootstrap-4-glyphicons-migration
+  http://fontawesome.io/
+--> 
+<link href="css/font-awesome-glyph.min.css" rel="stylesheet">
+<link rel="stylesheet" href="bootstrap.min.css">
+
+<script src="react.production.min.js"></script>
+<script src="react-dom.production.min.js"></script>
+<script src="babel.min.js"></script>
+
+<script src="react-jsonschema-form.js"></script>
+<script src="../mb-util/mbutil-browser.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+
+<!--<script src="script.js" _type="module"></script>-->
+<style>
+body {
+  padding: 50px;
+}
+.imp-name {
+  float: left;
+}
+.imp-name input {
+  width: 300px;
+}
+.imp-port input {
+  width: 100px;
+}
+.imp-method {
+  float: left;
+}
+.imp-method input {
+  width: 100px;
+}
+.imp-path {
+  float: left;
+}
+.imp-request {
+  clear: both;
+}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<script type="text/babel">
+// https://medium.com/@to_pe/how-to-add-react-to-a-simple-html-file-a11511c0235f
+/*
+class Greeting extends React.Component {
+    render() {
+        return (<p>Hello world</p>);
+    }
+}
+ReactDOM.render(
+    <Greeting />,
+    document.getElementById('app')
+);
+*/
+
+
+const Form = JSONSchemaForm.default;
+const schema = {
+  title: "Imposter",
+  type: "object",
+  required: ["name", "port", "stubs"],
+  properties: {
+    name: {type: "string", title: "Imposter Name", default: "New Imposter"},
+    port: {type: "integer", title: "Port", default: 3000},
+    stubs: {
+      type: 'array',
+      title: 'Stubs',
+      items: {
+        type: 'object',
+        properties: {
+          method: {type: 'string', enum: ["POST", "GET", "PUT", "PATCH", "DELETE"], title: "Method", default: "POST"},
+          path: {type: 'string', title: "Path", default: "/"},
+          request: {
+            type: 'object',
+            title: 'Request Params',
+            properties: {
+              headersArr: {
+                type: 'array',
+                title: 'Header Params',
+                items: {
+                  type: 'object',
+                  properties: { name: { type: 'string' }, value: { type: 'string' } }
+                }
+              },
+              queryArr: {
+                type: 'array',
+                title: 'Query Params',
+                items: {
+                  type: 'object',
+                  properties: { name: { type: 'string' }, value: { type: 'string' } }
+                }
+              }
+            }
+          },
+          response: {
+            type: 'object',
+            title: 'Response',
+            properties: {
+              statusCode: {type: 'integer', title: "Status Code", default: 200},
+              headersArr: {
+                type: 'array',
+                title: 'Headers',
+                items: {
+                  type: 'object',
+                  properties: { name: { type: 'string', default: 'Content-Type' }, value: { type: 'string', default: 'application/json'} }
+                }
+              },
+              body: {type: 'string', title: 'Body'}
+            }
+          }
+        }
+      }
+    }
+  }
+};
+const uiSchema = {
+  name: { classNames: "imp-name" },
+  port: { classNames: "imp-port" },
+  stubs: {
+    items: {
+      method: { classNames: "imp-method" },
+      path: { classNames: "imp-path" },
+      request: {
+        classNames: "imp-request"
+      },
+      response: {
+        body: {
+          "ui:widget": "textarea"
+        }
+      }
+    }
+  }
+}
+const formData = {
+  name: "New Imposter",
+  port: 3000
+};
+
+const log = (type) => console.log.bind(console, type);
+
+const onSubmit = function(form) {
+  let imposterData = form.formData
+
+  let imposterConf = new mbutil.Imposter({
+    'name': imposterData.name,
+    'port': imposterData.port,
+    'defaultResponse': { 'statusCode': 503, 'headers': { 'content-type': 'application/json' }, 'body': '{ "error": "No stub found" }' }
+  })
+
+  for (let stubData of imposterData.stubs) {
+    let { path, method, request, response } = stubData
+
+    // Since parameters and response headers are input as array of name/value,
+    // convert it to hash map wit name as key
+    if (request.headersArr) {
+      request.headers = {}
+      request.headersArr.forEach(function(hdr) {
+        request.headers[hdr['name']] = hdr['value']
+      })
+      delete request.headersArr
+    }
+    if (request.queryArr) {
+      request.query = {}
+      request.queryArr.forEach(function(qry) {
+        request.query[qry['name']] = qry['value']
+      })
+      delete request.queryArr
+    }
+    if (response.headersArr) {
+      response.headers = {}
+      response.headersArr.forEach(function(hdr) {
+        response.headers[hdr['name']] = hdr['value']
+      })
+      delete response.headersArr
+    }
+
+    let responses = [response]
+    let stub = mbutil.createStub({ path, method, request, responses })
+    imposterConf.addStub(stub)
+  }
+
+  let imposter = imposterConf.export()
+  console.log(imposter);
+  console.log(JSON.stringify(imposter, 0, 2));
+  let reqData = {
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(imposter)
+  }
+
+  //let mbUrl = 'http://appau101mel0709.globaltest.anz.com:2525'
+  let mbUrl = 'http://localhost:2525'
+
+  ajax("POST", mbUrl+'/imposters' , reqData, function(result) {
+    if (result.status == 201) console.log('Imposter posted successfully')
+    else console.log('Error', result)
+  })
+}
+
+ReactDOM.render((
+  <Form schema={schema}
+        uiSchema={uiSchema}
+        formData={formData}
+        onSubmit={onSubmit} />
+), document.getElementById("app"));
+
+
+
+var ajax = function(method, url, data, callback) {
+  var xhr = new XMLHttpRequest();
+  if (data.auth) xhr.open(method, url, true, data.auth.username, data.auth.password);
+  else xhr.open(method, url, true);
+
+  xhr.onload = function() { callback(this); };
+
+  for (let hdr in data.headers) { xhr.setRequestHeader(hdr, data.headers[hdr]) }
+
+  if (data.body) xhr.send(data.body);
+  else xhr.send();
+}
+
+</script>
+
+</body>
+</html>

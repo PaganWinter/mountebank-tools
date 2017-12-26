@@ -142,8 +142,23 @@ const schema = {
     }
   }
 };
+const formData = {
+  name: "New Imposter",
+  port: 3000,
+  stubs: [{
+    method: "POST",
+    path: "/",
+    response: {
+      headersArr: [{
+        name: "Content-Type",
+        value: "application/json"
+      }]
+    }
+  }]
+};
+
 const uiSchema = {
-  name: { classNames: "imp-name" },
+  name: { classNames: "imp-name", "ui:widget": "myCustomWidget" },
   port: { classNames: "imp-port" },
   stubs: {
     items: {
@@ -161,20 +176,20 @@ const uiSchema = {
   }
 }
 
-const formData = {
-  name: "New Imposter",
-  port: 3000,
-  stubs: [{
-    method: "POST",
-    path: "/",
-    response: {
-      headersArr: [{
-        name: "Content-Type",
-        value: "application/json"
-      }]
-    }
-  }]
+
+const MyCustomWidget = (props) => {
+  return (
+    <input type="text"
+      className="custom"
+      value={props.value}
+      required={props.required}
+      onChange={(event) => props.onChange(event.target.value)} />
+  );
 };
+const widgets = {
+  myCustomWidget: MyCustomWidget
+};
+
 /*
 const formData = {
   name: "New Imposter",
@@ -300,6 +315,7 @@ ReactDOM.render((
   <Form schema={schema}
         uiSchema={uiSchema}
         formData={formData}
+        widgets={widgets}
         onSubmit={onSubmit} />
 ), document.getElementById("app"));
 

@@ -65,6 +65,9 @@ body {
 <body>
 
 <div id="app"></div>
+<textarea id="imposter-json" cols="80" rows="15"></textarea>
+
+
 <script type="text/babel">
 // https://medium.com/@to_pe/how-to-add-react-to-a-simple-html-file-a11511c0235f
 /*
@@ -157,10 +160,13 @@ const uiSchema = {
     }
   }
 }
+
 const formData = {
   name: "New Imposter",
   port: 3000,
   stubs: [{
+    method: "POST",
+    path: "/",
     response: {
       headersArr: [{
         name: "Content-Type",
@@ -169,11 +175,18 @@ const formData = {
     }
   }]
 };
+/*
+const formData = {
+  name: "New Imposter",
+  port: 3000
+};
+*/
 
 const log = (type) => console.log.bind(console, type);
 
 const onSubmit = function(form) {
   let imposterData = form.formData
+  console.log('form.formData', form.formData)
 
   let imposterConf = new mbutil.Imposter({
     'name': imposterData.name,
@@ -186,14 +199,14 @@ const onSubmit = function(form) {
 
     // Since parameters and response headers are input as array of name/value,
     // convert it to hash map wit name as key
-    if (request.headersArr) {
+    if (request && request.headersArr) {
       request.headers = {}
       request.headersArr.forEach(function(hdr) {
         request.headers[hdr['name']] = hdr['value']
       })
       delete request.headersArr
     }
-    if (request.queryArr) {
+    if (request && request.queryArr) {
       request.query = {}
       request.queryArr.forEach(function(qry) {
         request.query[qry['name']] = qry['value']
@@ -216,6 +229,8 @@ const onSubmit = function(form) {
   let imposter = imposterConf.export()
   console.log(imposter);
   console.log(JSON.stringify(imposter, 0, 2));
+  document.getElementById('imposter-json').value = JSON.stringify(imposter, 0, 2)
+/*
   let reqData = {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(imposter)
@@ -227,7 +242,59 @@ const onSubmit = function(form) {
     if (result.status == 201) console.log('Imposter posted successfully')
     else console.log('Error', result)
   })
+*/
 }
+
+
+
+
+/*
+function ArrayFieldTemplate(props) {
+  return (
+    <div className={props.className}>
+      {props.items &&
+        props.items.map(element => (
+          <div key={element.index}>
+            <div>{element.children}</div>
+            {element.hasMoveDown && (
+              <button
+                onClick={element.onReorderClick(
+                  element.index,
+                  element.index + 1
+                )}>
+                Down
+              </button>
+            )}
+            {element.hasMoveUp && (
+              <button
+                onClick={element.onReorderClick(
+                  element.index,
+                  element.index - 1
+                )}>
+                Up
+              </button>
+            )}
+            <button onClick={element.onDropIndexClick(element.index)}>
+              Delete
+            </button>
+            <hr />
+          </div>
+        ))}
+
+      {props.canAdd && (
+        <div className="row">
+          <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
+            <button onClick={props.onAddClick} type="button">
+              Add
+            </button>
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+*/
+
 
 ReactDOM.render((
   <Form schema={schema}

@@ -86,8 +86,8 @@ const schema = {
   type: "object",
   required: ["name", "port", "stubs"],
   properties: {
-    name: {type: "string", title: "Imposter Name", default: "New Imposter"},
-    port: {type: "integer", title: "Port", default: 3000},
+    name: {type: "string", title: "Imposter Name"},
+    port: {type: "integer", title: "Port"},
     stubs: {
       type: 'array',
       title: 'Stubs',
@@ -128,7 +128,7 @@ const schema = {
                 title: 'Headers',
                 items: {
                   type: 'object',
-                  properties: { name: { type: 'string', default: 'Content-Type' }, value: { type: 'string', default: 'application/json'} }
+                  properties: { name: { type: 'string' }, value: { type: 'string' } }
                 }
               },
               body: {type: 'string', title: 'Body'}
@@ -159,7 +159,15 @@ const uiSchema = {
 }
 const formData = {
   name: "New Imposter",
-  port: 3000
+  port: 3000,
+  stubs: [{
+    response: {
+      headersArr: [{
+        name: "Content-Type",
+        value: "application/json"
+      }]
+    }
+  }]
 };
 
 const log = (type) => console.log.bind(console, type);

@@ -16,106 +16,9 @@ body {
   font-family: "Helvetica Neue", Robot, "Segoe UI"
 }
 fieldset {
-  border: 0.5px solid #bbb !important;
+  //border: 0.5px solid #bbb !important;
 }
 </style>
-
-<!--
-<style>
-/*!
- * bootstrap-vertical-tabs - v1.1.0
- * https://dbtek.github.io/bootstrap-vertical-tabs
- * 2014-06-06
- * Copyright (c) 2014 Ä°smail Demirbilek
- * License: MIT
- */
-.tabs-left, .tabs-right {
-  border-bottom: none;
-  padding-top: 2px;
-}
-.tabs-left {
-  border-right: 1px solid #ddd;
-}
-.tabs-right {
-  border-left: 1px solid #ddd;
-}
-.tabs-left>li, .tabs-right>li {
-  float: none;
-  margin-bottom: 2px;
-}
-.tabs-left>li {
-  margin-right: -1px;
-}
-.tabs-right>li {
-  margin-left: -1px;
-}
-.tabs-left>li.active>a,
-.tabs-left>li.active>a:hover,
-.tabs-left>li.active>a:focus {
-  border-bottom-color: #ddd;
-  border-right-color: transparent;
-}
-
-.tabs-right>li.active>a,
-.tabs-right>li.active>a:hover,
-.tabs-right>li.active>a:focus {
-  border-bottom: 1px solid #ddd;
-  border-left-color: transparent;
-}
-.tabs-left>li>a {
-  border-radius: 4px 0 0 4px;
-  margin-right: 0;
-  display:block;
-}
-.tabs-right>li>a {
-  border-radius: 0 4px 4px 0;
-  margin-right: 0;
-}
-.vertical-text {
-  margin-top:50px;
-  border: none;
-  position: relative;
-}
-.vertical-text>li {
-  height: 20px;
-  width: 120px;
-  margin-bottom: 100px;
-}
-.vertical-text>li>a {
-  border-bottom: 1px solid #ddd;
-  border-right-color: transparent;
-  text-align: center;
-  border-radius: 4px 4px 0px 0px;
-}
-.vertical-text>li.active>a,
-.vertical-text>li.active>a:hover,
-.vertical-text>li.active>a:focus {
-  border-bottom-color: transparent;
-  border-right-color: #ddd;
-  border-left-color: #ddd;
-}
-.vertical-text.tabs-left {
-  left: -50px;
-}
-.vertical-text.tabs-right {
-  right: -50px;
-}
-.vertical-text.tabs-right>li {
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  transform: rotate(90deg);
-}
-.vertical-text.tabs-left>li {
-  -webkit-transform: rotate(-90deg);
-  -moz-transform: rotate(-90deg);
-  -ms-transform: rotate(-90deg);
-  -o-transform: rotate(-90deg);
-  transform: rotate(-90deg);
-}
-</style>
--->
 
 </head>
 <body>
@@ -123,19 +26,20 @@ fieldset {
 <div class="container">
 <form>
   <div class="row">
-    Name <input type="text" />:<input type="number" placeholder="port"/>
+    Name <input type="text" />:<input type="number" placeholder="port" value="3000" />
   </div>
 
   <div class="row">
 
-      <ul class="nav nav-pills flex-column col-md-2" role="tablist" aria-orientation="vertical">
-        <li class="nav-item"><a class="nav-link active" href="#stub_1" data-toggle="tab" role="tab">Stub 1</a></li>
-        <li class="nav-item"><a class="nav-link" href="#stub_2" data-toggle="tab">Stub 2</a></li>
-        <li class="nav-item"><a class="nav-link" href="#stub_3" data-toggle="tab">Stub 3</a></li>
+      <ul class="nav nav-pills flex-column col-md-2" role="tablist" aria-orientation="vertical" id="stub-tabs">
+        <li class="nav-item stub-tab"><a class="nav-link active" href="#stub_1" data-toggle="tab">Stub 1</a></li>
+        <li class="nav-item stub-tab"><a class="nav-link" href="#stub_2" data-toggle="tab">Stub 2</a></li>
+        <li class="nav-item stub-tab"><a class="nav-link" href="#stub_3" data-toggle="tab">Stub 3</a></li>
+        <li><button class="add-stub">+stub</button></li>
       </ul>
 
-      <div class="tab-content col-md-10">
-        <div class="tab-pane form-group active" id="stub_1">
+      <div class="tab-content col-md-10" id="stub-panes">
+        <div class="tab-pane form-group stub-pane active" id="stub_1">
           <fieldset>
             <legend>Stub-1</legend>
 
@@ -151,39 +55,48 @@ fieldset {
                 </select>
               </div>
               <div class="col-md-4">
-                <input type="text" placeholder="path" class="form-control" />
+                <input type="text" placeholder="path" class="form-control" value="" />
               </div>
             </div>
 
-            <fieldset>
+            <fieldset class="form-row req-qry">
               <legend>Query</legend>
-              <button>+</button><br />
-            </fieldset>
-            <fieldset class="form-row">
-              <legend>Headers</legend>
               <ul>
                 <li class="form-row">
                   <div class="col-xs-2"><input type="text" class="form-control" placeholder="name" /></div>
                   <div class="col-xs-2"><input type="text" class="form-control" placeholder="value" /></div>
-                  <div class="col-xs-2"><button>-</button></div>
-                </li>
-                <li class="form-row">
-                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="name" /></div>
-                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="value" /></div>
-                  <div class="col-xs-2"><button>-</button></div>
+                  <div class="col-xs-2"><button class="remove">-</button></div>
                 </li>
               </ul>
-              <button>+</button><br />
+              <button class="add-req-qry">+</button><br />
+            </fieldset>
+            <fieldset class="form-row req-hdr">
+              <legend>Headers</legend>
+              <ul>
+                <li class="form-row">
+                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="name" value="X-B3-TraceId" /></div>
+                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="value" value="opId_001" /></div>
+                  <div class="col-xs-2"><button class="remove">-</button></div>
+                </li>
+              </ul>
+              <button class="add-req-hdr">+</button><br />
             </fieldset>
             <fieldset class="form-row">
               <legend>Response</legend>
               Status:<input type="number" placeholder="status" >
-              <fieldset>
+
+              <fieldset class="form-row res-hdr">
                 <legend>Headers</legend>
-                <input type="text" class="form-control" placeholder="name" value="Cotent-Type" ><input type="text" class="form-control" placeholder="value" value="application/json" ><button>-</button><br />
-                <input type="text" class="form-control" placeholder="name" ><input type="text" class="form-control" placeholder="value" ><button>-</button><br />
-                <button>+</button><br />
+                <ul>
+                  <li class="form-row">
+                    <div class="col-xs-2"><input type="text" class="form-control" placeholder="name" value="Content-Type" /></div>
+                    <div class="col-xs-2"><input type="text" class="form-control" placeholder="value" value="application/json" /></div>
+                    <div class="col-xs-2"><button class="remove">-</button></div>
+                  </li>
+                </ul>
+                <button class="add-res-hdr">+</button><br />
               </fieldset>
+
               Body:<br />
               <textarea cols="50" rows="5"></textarea>
             </fieldset>
@@ -276,6 +189,111 @@ fieldset {
 </form>
 </div>
 
+
+<div class="templates d-none">
+  <li class="nav-item stub-tab">
+    <a class="nav-link" href="#stub_3" data-toggle="tab">Stub 3</a>
+  </li>
+
+
+  <div class="tab-pane form-group stub-pane">
+    <fieldset>
+      <legend>Stub-1</legend>
+
+      <div class="form-row">
+        <div class="col-xs-2">
+          <select class="form-control">
+            <option>-ANY-</option>
+            <option>POST</option>
+            <option>GET</option>
+            <option>PUT</option>
+            <option>PATCH</option>
+            <option>DELETE</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <input type="text" placeholder="path" class="form-control" value="" />
+        </div>
+      </div>
+
+      <fieldset class="form-row req-qry">
+        <legend>Query</legend>
+        <ul>
+          <li class="form-row">
+            <div class="col-xs-2"><input type="text" class="form-control" placeholder="name" /></div>
+            <div class="col-xs-2"><input type="text" class="form-control" placeholder="value" /></div>
+            <div class="col-xs-2"><button class="remove">-</button></div>
+          </li>
+        </ul>
+        <button class="add-req-qry">+</button><br />
+      </fieldset>
+      <fieldset class="form-row req-hdr">
+        <legend>Headers</legend>
+        <ul>
+          <li class="form-row">
+            <div class="col-xs-2"><input type="text" class="form-control" placeholder="name" value="X-B3-TraceId" /></div>
+            <div class="col-xs-2"><input type="text" class="form-control" placeholder="value" value="opId_001" /></div>
+            <div class="col-xs-2"><button class="remove">-</button></div>
+          </li>
+        </ul>
+        <button class="add-req-hdr">+</button><br />
+      </fieldset>
+      <fieldset class="form-row">
+        <legend>Response</legend>
+        Status:<input type="number" placeholder="status" >
+
+        <fieldset class="form-row res-hdr">
+          <legend>Headers</legend>
+          <ul>
+            <li class="form-row">
+              <div class="col-xs-2"><input type="text" class="form-control" placeholder="name" value="Content-Type" /></div>
+              <div class="col-xs-2"><input type="text" class="form-control" placeholder="value" value="application/json" /></div>
+              <div class="col-xs-2"><button class="remove">-</button></div>
+            </li>
+          </ul>
+          <button class="add-res-hdr">+</button><br />
+        </fieldset>
+
+        Body:<br />
+        <textarea cols="50" rows="5"></textarea>
+      </fieldset>
+    </fieldset>
+  </div>
+</div>
+
+
+<script>
+$(document).ready(function() {
+  $('.add-stub').click(function() {
+    $('#stub-tabs li.nav-item:last').after($('.templates .stub-tab').clone().attr('id', 'stub'))
+    $('#stub-panes .tab-pane:last').after($('.templates .stub-pane').clone())
+    $('#stub-tabs li.nav-item:last').find('a').trigger('click')
+  })
+
+
+  $('.add-req-qry').click(function() {
+    console.log($('.req-qry li:last'))
+    $('.req-qry li:last').after($('.req-qry li:last').clone())
+  })
+  $('.req-qry').on('click', '.remove', function() {
+    $(this).closest('li').remove()
+  })
+
+  $('.add-req-hdr').click(function() {
+    $('.req-hdr li:last').after($('.req-hdr li:last').clone())
+  })
+  $('.req-hdr').on('click', '.remove', function() {
+    $(this).closest('li').remove()
+  })
+
+  $('.add-res-hdr').click(function() {
+    $('.res-hdr li:last').after($('.res-hdr li:last').clone())
+  })
+  $('.res-hdr').on('click', '.remove', function() {
+    $(this).closest('li').remove()
+  })
+})
+</script>
 
 
 <div id="app"></div>

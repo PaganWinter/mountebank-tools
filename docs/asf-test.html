@@ -1,0 +1,246 @@
+<html>
+<head>
+  <title>angular-schema-form</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-sanitize.js"></script>
+  <script src="tv4.js"></script>
+  <script src="ObjectPath.js"></script>
+
+  <script src="asf/angular-schema-form.js"></script>
+  <script src="asf/angular-schema-form-bootstrap.js"></script>
+
+  <link rel="stylesheet" href="bootstrap.vertical-tabs.css" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+
+<!--
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+-->
+
+</head>
+<body>
+
+<div ng-app="myModule" ng-controller="FormController" class="container">
+  <form
+    sf-schema="schema"
+    sf-form="form"
+    sf-model="model"
+    sf-options="options"
+  >
+  </form>
+</div>
+
+<script>
+//console.log(angular)
+
+const schema = {
+  title: "Imposter",
+  type: "object",
+  required: ["name", "port", "stubs"],
+  properties: {
+    name: {type: "string", title: "Imposter Name"},
+    port: {type: "integer", title: "Port"},
+    stubs: {
+      type: 'array',
+      title: 'Stubs',
+      items: {
+        type: 'object',
+        properties: {
+          description: {type: 'string'},
+          method: {type: 'string', enum: ["POST", "GET", "PUT", "PATCH", "DELETE"], title: "Method", default: "POST"},
+          path: {type: 'string', title: "Path", default: "/"},
+          request: {
+            type: 'object',
+            title: 'Request Params',
+            properties: {
+              headersArr: {
+                type: 'array',
+                title: 'Header Params',
+                items: {
+                  type: 'object',
+                  properties: { name: { type: 'string' }, value: { type: 'string' } }
+                }
+              },
+              queryArr: {
+                type: 'array',
+                title: 'Query Params',
+                items: {
+                  type: 'object',
+                  properties: { name: { type: 'string' }, value: { type: 'string' } }
+                }
+              }
+            }
+          },
+          response: {
+            type: 'object',
+            title: 'Response',
+            properties: {
+              statusCode: {type: 'integer', title: "Status Code", default: 200},
+              headersArr: {
+                type: 'array',
+                title: 'Headers',
+                items: {
+                  type: 'object',
+                  properties: { name: { type: 'string' }, value: { type: 'string' } }
+                }
+              },
+              body: {type: 'string', title: 'Body'}
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+angular.module('myModule', ['schemaForm'])
+       .controller('FormController', function($scope) {
+/*
+  $scope.schema = {
+    type: "object",
+    properties: {
+      name: { type: "string", minLength: 2, title: "Name", description: "Name or alias" },
+      title: {
+        type: "string",
+        enum: ['dr','jr','sir','mrs','mr','NaN','dj']
+      }
+    }
+  };
+
+  $scope.form = [
+    "*",
+    {
+      type: "submit",
+      title: "Save"
+    }
+  ];
+*/
+
+  $scope.schema = schema
+  $scope.form = [
+    {
+      key: "stubs",
+      type: "tabarray",
+      _tabType: "top",
+      title: "{{value.description || ('Stub '+$index)}}",
+      remove: "Delete",
+      style: {
+        remove: "btn-danger"
+      },
+      add: "Add stub",
+      items: [
+        "stubs[].description",
+        {
+          type: "section",
+          htmlClass: "row",
+          items: [
+            {
+              type: "section",
+              htmlClass: "col-xs-6",
+              items: [
+                "stubs[].method"
+              ]
+            },
+            {
+              type: "section",
+              htmlClass: "col-xs-6",
+              items: [
+                "stubs[].path"
+              ]
+            }
+          ]
+        },
+        {
+          key: "stubs[].request.headersArr",
+          type: "array",
+          items: [
+            {
+              type: "section",
+              htmlClass: "row",
+              items: [
+                {
+                  type: "section",
+                  htmlClass: "col-xs-6",
+                  items: [ "stubs[].request.headersArr[].name" ]
+                },
+                {
+                  type: "section",
+                  htmlClass: "col-xs-6",
+                  items: [ "stubs[].request.headersArr[].value" ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          key: "stubs[].request.queryArr",
+          type: "array",
+          items: [
+            {
+              type: "section",
+              htmlClass: "row",
+              items: [
+                {
+                  type: "section",
+                  htmlClass: "col-xs-6",
+                  items: [ "stubs[].request.queryArr[].name" ]
+                },
+                {
+                  type: "section",
+                  htmlClass: "col-xs-6",
+                  items: [ "stubs[].request.queryArr[].value" ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: "fieldset",
+          title: "Response",
+          items: [
+            "stubs[].response.status",
+            {
+              key: "stubs[].response.headersArr",
+              type: "array",
+              items: [
+                {
+                  type: "section",
+                  htmlClass: "row",
+                  items: [
+                    {
+                      type: "section",
+                      htmlClass: "col-xs-6",
+                      items: [ "stubs[].response.headersArr[].name" ]
+                    },
+                    {
+                      type: "section",
+                      htmlClass: "col-xs-6",
+                      items: [ "stubs[].response.headersArr[].value" ]
+                    }
+                  ]
+                }
+              ]
+            },
+          ]
+        },
+        "_stubs[].response"
+      ]
+    },
+  ];
+
+  $scope.model = {};
+  $scope.options = {
+    validateOnRender: false
+  };
+});
+</script>
+
+</body>
+</html>

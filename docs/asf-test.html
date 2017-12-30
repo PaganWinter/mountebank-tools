@@ -136,76 +136,85 @@ angular.module('myModule', ['schemaForm'])
       },
       add: "Add stub",
       items: [
-        "stubs[].description",
         {
-          type: "section",
-          htmlClass: "row",
+          type: "fieldset",
+          title: "Request",
           items: [
             {
-              type: "section",
-              htmlClass: "col-xs-6",
-              items: [
-                "stubs[].method"
-              ]
+              key: "stubs[].description",
+              type: "text"
             },
             {
               type: "section",
-              htmlClass: "col-xs-6",
-              items: [
-                "stubs[].path"
-              ]
-            }
-          ]
-        },
-        {
-          key: "stubs[].request.headersArr",
-          type: "array",
-          items: [
-            {
-              type: "section",
               htmlClass: "row",
               items: [
                 {
                   type: "section",
                   htmlClass: "col-xs-6",
-                  items: [ "stubs[].request.headersArr[].name" ]
+                  items: [
+                    "stubs[].method"
+                  ]
                 },
                 {
                   type: "section",
                   htmlClass: "col-xs-6",
-                  items: [ "stubs[].request.headersArr[].value" ]
+                  items: [
+                    "stubs[].path"
+                  ]
                 }
               ]
-            }
-          ]
-        },
-        {
-          key: "stubs[].request.queryArr",
-          type: "array",
-          items: [
+            },
             {
-              type: "section",
-              htmlClass: "row",
+              key: "stubs[].request.headersArr",
+              type: "array",
               items: [
                 {
                   type: "section",
-                  htmlClass: "col-xs-6",
-                  items: [ "stubs[].request.queryArr[].name" ]
-                },
-                {
-                  type: "section",
-                  htmlClass: "col-xs-6",
-                  items: [ "stubs[].request.queryArr[].value" ]
+                  htmlClass: "row",
+                  items: [
+                    {
+                      type: "section",
+                      htmlClass: "col-xs-6",
+                      items: [ "stubs[].request.headersArr[].name" ]
+                    },
+                    {
+                      type: "section",
+                      htmlClass: "col-xs-6",
+                      items: [ "stubs[].request.headersArr[].value" ]
+                    }
+                  ]
                 }
               ]
-            }
+            },
+            {
+              key: "stubs[].request.queryArr",
+              type: "array",
+              items: [
+                {
+                  type: "section",
+                  htmlClass: "row",
+                  items: [
+                    {
+                      type: "section",
+                      htmlClass: "col-xs-6",
+                      items: [ "stubs[].request.queryArr[].name" ]
+                    },
+                    {
+                      type: "section",
+                      htmlClass: "col-xs-6",
+                      items: [ "stubs[].request.queryArr[].value" ]
+                    }
+                  ]
+                }
+              ]
+            },
           ]
         },
         {
           type: "fieldset",
           title: "Response",
           items: [
-            "stubs[].response.status",
+            "stubs[].response.statusCode",
             {
               key: "stubs[].response.headersArr",
               type: "array",
@@ -228,9 +237,12 @@ angular.module('myModule', ['schemaForm'])
                 }
               ]
             },
+            {
+              key: "stubs[].response.body",
+              type: "textarea"
+            }
           ]
-        },
-        "_stubs[].response"
+        }
       ]
     },
   ];

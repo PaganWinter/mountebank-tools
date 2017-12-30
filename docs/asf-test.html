@@ -29,12 +29,15 @@
 
 <div ng-app="myModule" ng-controller="FormController" class="container">
   <form
+    name="mbForm"
     sf-schema="schema"
     sf-form="form"
-    sf-model="model"
+    sf-model="formData"
     sf-options="options"
+    ng-submit="onSubmit(mbForm)"
   >
   </form>
+  <textarea cols="100" rows="15">{{imposter}}</textarea>
 </div>
 
 <script>
@@ -125,6 +128,26 @@ angular.module('myModule', ['schemaForm'])
 
   $scope.schema = schema
   $scope.form = [
+    {
+      type: "section",
+      htmlClass: "row",
+      items: [
+        {
+          type: "section",
+          htmlClass: "col-xs-6",
+          items: [
+            "name"
+          ]
+        },
+        {
+          type: "section",
+          htmlClass: "col-xs-6",
+          items: [
+            "port"
+          ]
+        }
+      ]
+    },
     {
       key: "stubs",
       type: "tabarray",
@@ -245,12 +268,27 @@ angular.module('myModule', ['schemaForm'])
         }
       ]
     },
+    {
+      type: 'submit',
+      title: 'Save'
+    }
   ];
 
-  $scope.model = {};
+  $scope.formData = {};
   $scope.options = {
     validateOnRender: false
   };
+  $scope.onSubmit = function(form) {
+    console.log($scope.formData)
+    $scope.imposter = JSON.stringify($scope.formData, 0, 2)
+
+    // First we broadcast an event so all fields validate themselves
+    $scope.$broadcast('schemaFormValidate');
+    // Then we check if the form is valid
+    if (form.$valid) {
+      // ... do whatever you need to do with your data.
+    }
+  }
 });
 </script>
 

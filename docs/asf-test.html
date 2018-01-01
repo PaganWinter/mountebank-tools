@@ -9,25 +9,62 @@
   <script src="asf/angular-schema-form.js"></script>
   <script src="asf/angular-schema-form-bootstrap.js"></script>
 
-  <link rel="stylesheet" href="bootstrap.vertical-tabs.css" />
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-
 
 <!--
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+-->
+<!--
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 -->
 
+  <link rel="stylesheet" _href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" crossorigin="anonymous" />
+
+  <!--<link rel="stylesheet" href="bootstrap.vertical-tabs.css" />-->
+
+<style>
+.nav-tabs {
+  display: block;
+}
+.nav-tabs:after {
+  clear: both;
+  display: table;
+  content: " ";
+}
+.nav-tabs>li {
+  float: left;
+  margin-bottom: -1px;
+}
+.nav-tabs>li>a {
+  padding: 10px 15px;
+  display: block;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 4px 4px 0 0;
+}
+.nav-tabs>li>a:hover {
+  background: #ddd;
+}
+.nav-tabs>li.active {
+}
+.nav-tabs>li.active>a {
+  cursor: default;
+  color: #555;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+}
+</style>
+
 </head>
 <body>
 
-<div ng-app="myModule" ng-controller="FormController" class="container">
+<div ng-app="myModule" ng-controller="FormController" class="container-fluid">
   <form
     name="mbForm"
     sf-schema="schema"
@@ -37,11 +74,64 @@
     ng-submit="onSubmit(mbForm)"
   >
   </form>
-  <textarea cols="100" rows="15">{{imposter}}</textarea>
+
+  <div class="row">
+    <div class="col-6">
+      <textarea class="form-control" cols="100" rows="15">{{imposter}}</textarea>
+    </div>
+  </div>
 </div>
 
+
+<script src="../mb-util/mbutil-browser.js"></script>
 <script>
-//console.log(angular)
+// https://github.com/json-schema-form/angular-schema-form/blob/development/docs/index.md
+// http://schemaform.io/examples/bootstrap-example.html
+// https://getbootstrap.com/docs/4.0/components/navs/#tabs
+
+function generateImposter(imposterData) {
+  //var imposterData = JSON.parse(JSON.stringify(imposterData))
+  let imposterConf = new mbutil.Imposter({
+    'name': imposterData.name,
+    'port': imposterData.port,
+    'defaultResponse': { 'statusCode': 503, 'headers': { 'content-type': 'application/json' }, 'body': '{ "error": "No stub found" }' }
+  })
+
+  for (let stubData of imposterData.stubs) {
+    let { path, method, request, response } = stubData
+
+    // Since parameters and response headers are input as array of name/value,
+    // convert it to hash map wit name as key
+    if (request && request.headersArr) {
+      request.headers = {}
+      request.headersArr.forEach(function(hdr) {
+        request.headers[hdr['name']] = hdr['value']
+      })
+      delete request.headersArr
+    }
+    if (request && request.queryArr) {
+      request.query = {}
+      request.queryArr.forEach(function(qry) {
+        request.query[qry['name']] = qry['value']
+      })
+      delete request.queryArr
+    }
+    if (response.headersArr) {
+      response.headers = {}
+      response.headersArr.forEach(function(hdr) {
+        response.headers[hdr['name']] = hdr['value']
+      })
+      delete response.headersArr
+    }
+
+    let responses = [response]
+    let stub = mbutil.createStub({ path, method, request, responses })
+    imposterConf.addStub(stub)
+  }
+
+  let imposter = imposterConf.export()
+  return imposter
+}
 
 const schema = {
   title: "Imposter",
@@ -56,7 +146,7 @@ const schema = {
       items: {
         type: 'object',
         properties: {
-          description: {type: 'string'},
+          description: {type: 'string', title: "Description" },
           method: {type: 'string', enum: ["POST", "GET", "PUT", "PATCH", "DELETE"], title: "Method", default: "POST"},
           path: {type: 'string', title: "Path", default: "/"},
           request: {
@@ -85,7 +175,7 @@ const schema = {
             type: 'object',
             title: 'Response',
             properties: {
-              statusCode: {type: 'integer', title: "Status Code", default: 200},
+              statusCode: {type: 'integer', title: "Status Code", _description: "Status code of response", default: 200},
               headersArr: {
                 type: 'array',
                 title: 'Headers',
@@ -129,19 +219,20 @@ angular.module('myModule', ['schemaForm'])
   $scope.schema = schema
   $scope.form = [
     {
+      _desc: "Name and Port",
       type: "section",
       htmlClass: "row",
       items: [
         {
           type: "section",
-          htmlClass: "col-xs-6",
+          htmlClass: "col-md-3",
           items: [
             "name"
           ]
         },
         {
           type: "section",
-          htmlClass: "col-xs-6",
+          htmlClass: "col-md-2",
           items: [
             "port"
           ]
@@ -149,38 +240,50 @@ angular.module('myModule', ['schemaForm'])
       ]
     },
     {
+      _desc: "Stubs array tabs",
       key: "stubs",
       type: "tabarray",
       _tabType: "top",
-      title: "{{value.description || ('Stub '+$index)}}",
-      remove: "Delete",
+      title: "{{ ('Stub '+$index) || 'Stub '+value.description || ('Stub '+$index) }}",
+      remove: "Delete Stub",
       style: {
         remove: "btn-danger"
       },
       add: "Add stub",
       items: [
         {
-          type: "fieldset",
-          title: "Request",
+          type: "section",
+          htmlClass: "row",
           items: [
             {
-              key: "stubs[].description",
-              type: "text"
+              _desc: "Stub description",
+              type: "section",
+              htmlClass: "col-md-6",
+              items: [
+                "stubs[].description"
+              ]
             },
+          ]
+        },
+        {
+          type: "fieldset",
+          title: "Request/Predicates",
+          items: [
             {
+              _desc: "Method and Path",
               type: "section",
               htmlClass: "row",
               items: [
                 {
                   type: "section",
-                  htmlClass: "col-xs-6",
+                  htmlClass: "col-md-2",
                   items: [
                     "stubs[].method"
                   ]
                 },
                 {
                   type: "section",
-                  htmlClass: "col-xs-6",
+                  htmlClass: "col-md-6",
                   items: [
                     "stubs[].path"
                   ]
@@ -188,90 +291,153 @@ angular.module('myModule', ['schemaForm'])
               ]
             },
             {
-              key: "stubs[].request.headersArr",
-              type: "array",
+              type: "section",
+              htmlClass: "row",
               items: [
                 {
-                  type: "section",
-                  htmlClass: "row",
+                  _desc: "Request Header Params",
+                  key: "stubs[].request.headersArr",
+                  htmlClass: "col-md-6",
+                  type: "array",
                   items: [
                     {
                       type: "section",
-                      htmlClass: "col-xs-6",
-                      items: [ "stubs[].request.headersArr[].name" ]
-                    },
+                      htmlClass: "row",
+                      items: [
+                        {
+                          type: "section",
+                          htmlClass: "col-md-6",
+                          items: [ "stubs[].request.headersArr[].name" ]
+                        },
+                        {
+                          type: "section",
+                          htmlClass: "col-md-6",
+                          items: [ "stubs[].request.headersArr[].value" ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  _desc: "Request Query Params",
+                  key: "stubs[].request.queryArr",
+                  htmlClass: "col-md-6",
+                  type: "array",
+                  items: [
                     {
                       type: "section",
-                      htmlClass: "col-xs-6",
-                      items: [ "stubs[].request.headersArr[].value" ]
+                      htmlClass: "row",
+                      items: [
+                        {
+                          type: "section",
+                          htmlClass: "col-md-6",
+                          items: [ "stubs[].request.queryArr[].name" ]
+                        },
+                        {
+                          type: "section",
+                          htmlClass: "col-md-6",
+                          items: [ "stubs[].request.queryArr[].value" ]
+                        }
+                      ]
                     }
                   ]
                 }
               ]
-            },
-            {
-              key: "stubs[].request.queryArr",
-              type: "array",
-              items: [
-                {
-                  type: "section",
-                  htmlClass: "row",
-                  items: [
-                    {
-                      type: "section",
-                      htmlClass: "col-xs-6",
-                      items: [ "stubs[].request.queryArr[].name" ]
-                    },
-                    {
-                      type: "section",
-                      htmlClass: "col-xs-6",
-                      items: [ "stubs[].request.queryArr[].value" ]
-                    }
-                  ]
-                }
-              ]
-            },
+            }
           ]
         },
         {
+          _desc: "Response",
           type: "fieldset",
           title: "Response",
           items: [
-            "stubs[].response.statusCode",
             {
-              key: "stubs[].response.headersArr",
-              type: "array",
+              type: "section",
+              htmlClass: "row",
               items: [
                 {
-                  type: "section",
-                  htmlClass: "row",
-                  items: [
-                    {
-                      type: "section",
-                      htmlClass: "col-xs-6",
-                      items: [ "stubs[].response.headersArr[].name" ]
-                    },
-                    {
-                      type: "section",
-                      htmlClass: "col-xs-6",
-                      items: [ "stubs[].response.headersArr[].value" ]
-                    }
-                  ]
+                  _desc: "Response Status",
+                  key: "stubs[].response.statusCode",
+                  _fieldAddonLeft: "Status code:",
+                  htmlClass: "col-md-2",
                 }
               ]
             },
             {
-              key: "stubs[].response.body",
-              type: "textarea"
+              type: "section",
+              htmlClass: "row",
+              items: [
+                {
+                  _desc: "Response Headers",
+                  key: "stubs[].response.headersArr",
+                  htmlClass: "col-md-6",
+                  type: "array",
+                  items: [
+                    {
+                      type: "section",
+                      htmlClass: "row",
+                      items: [
+                        {
+                          type: "section",
+                          htmlClass: "col-md-6",
+                          items: [ "stubs[].response.headersArr[].name" ]
+                        },
+                        {
+                          type: "section",
+                          htmlClass: "col-md-6",
+                          items: [ "stubs[].response.headersArr[].value" ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  _desc: "Response Body",
+                  key: "stubs[].response.body",
+                  type: "textarea",
+                  htmlClass: "col-md-6",
+                }
+              ]
             }
           ]
         }
       ]
     },
     {
-      type: 'submit',
-      title: 'Save'
+      type: "section",
+      htmlClass: "row",
+      items: [
+        {
+          type: "section",
+          htmlClass: "col-md-2",
+          items: [
+            {
+              type: 'submit',
+              title: 'Create Imposter'
+            }
+          ]
+        }
+      ]
+    },
+/*
+    {
+      type: "section",
+      htmlClass: "row",
+      items: [
+        {
+          type: "section",
+          htmlClass: "col-md-6",
+          items: [
+            {
+              type: 'textarea',
+              title: 'Imposter',
+              htmlClass: 'imposter-json'
+            }
+          ]
+        }
+      ]
     }
+*/
   ];
 
   $scope.formData = {};
@@ -279,14 +445,18 @@ angular.module('myModule', ['schemaForm'])
     validateOnRender: false
   };
   $scope.onSubmit = function(form) {
-    console.log($scope.formData)
-    $scope.imposter = JSON.stringify($scope.formData, 0, 2)
+    let imposter = generateImposter(angular.copy($scope.formData))
+    console.log('imposter', imposter)
+    $scope.imposter = angular.toJson(imposter, 2) //JSON.stringify($scope.formData, 0, 2)
 
     // First we broadcast an event so all fields validate themselves
     $scope.$broadcast('schemaFormValidate');
     // Then we check if the form is valid
     if (form.$valid) {
       // ... do whatever you need to do with your data.
+      //console.error('valid')
+    } else {
+      console.error('invalid', form.$valid)
     }
   }
 });
